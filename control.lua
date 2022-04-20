@@ -1,9 +1,10 @@
+---@type TestClass
 local TestClass = require("__nco-Testmod__.script.TestClass")
 -------------------------------------------------------------------------------
 --- Variables
 --- Is it desync safe to use locals to store references to the class objects in different structure  as long as the class'es object data is global'ized?
 -------------------------------------------------------------------------------
----@type table
+---@type table<uint,TestClass>
 local TestClass_Instances = {}
 
 -------------------------------------------------------------------------------
@@ -64,7 +65,8 @@ local function on_entity_destroyed(event)
     log("control:on_entity_destroyed")
     local unit_data = global.unit_registration[event.registration_number]
     if unit_data and global.class_objects[unit_data.class_name] then
-        global.class_objects[unit_data.class_name][unit_data.object_id] = nil
+        TestClass_Instances[unit_data.object_id]:destroy() -- we need to either nil the instance-data global-member to call destroy from gc or manually call it
+        TestClass_Instances[unit_data.object_id] = nil
     end
 end
 
