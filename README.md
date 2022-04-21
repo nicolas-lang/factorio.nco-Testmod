@@ -1,19 +1,16 @@
 # Factorio Test Mod
 
 
-### **introduction:**
+After a stern talking to, regarding my initial (very naive) approach of object orientation in factorio-modding (especially in the  context of desync safety), I have spent some time refactoring my approach.
 
-- After the previous discussion with ... regarding object orientation in context of desync safety, I have spent some time refactoring my approach and ended up with this example.
-- I would really appreciate some thoughts if this is what you meant with ..., also I am open for suggestions regarding possible improvements
+After integrating the suggestion to globalize my classes, I ended up with this example.
 
-### **use case:**
-
-- the main focus is to create code with a very localized scope's
+### use case:
+- the main focus is to create code with very localized scope's
 - the final mod will not "wrap"" many LuaEntities (expected <100) but has multiple layers of logic
-- object orientation will help keeping the global control code simple while allowing localized 'hacks' around api limitations
+- object orientation will help keeping the main-control-flow simple while allowing localized intricate 'hacks' around for example api limitations
 
-### **assumptions:**
-
+### assumptions:
 - perforemance is not part of the current considerations
-
--------------------------------------------------------------------------------
+- I really want to do this!
+I would really appreciate some thoughts if this seems more reasonable than my 1st approach - also I am open for suggestions regarding possible improvements.
