@@ -11,9 +11,8 @@ local TestClass = {
     --- garbage collection callback; this needs to be part of the userdata table to make it work
     ---@param self any
     __gc = function(self)
-        if self and self.destroy then
-            game.print("gc:destroy")
-            self:destroy()
+        if global.class_objects[self.class_name] then
+            assert(global.class_objects[self.class_name][self.id] == nil)
         end
     end
 }
