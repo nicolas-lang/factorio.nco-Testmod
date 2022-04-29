@@ -16,8 +16,7 @@ local TestClass = {
         end
     end
 }
-TestClass = require("__nco-Testmod__.script.ClassFactory")(TestClass,TestClassParent)
---[[
+
 ---Class setup
 TestClass.__index = TestClass
 setmetatable(
@@ -40,7 +39,7 @@ setmetatable(
         end
     }
 )
-]]
+
 ---Static function to set up required additional globals during on_init
 function TestClass.on_init()
     global.class_objects[TestClass.__name] = {}
