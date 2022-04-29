@@ -2,43 +2,14 @@ local TestClassParent = require("__nco-Testmod__.script.TestClassParent")
 
 ---TestClass to examine loading and re-creating class objects from globals
 ---@class TestClass : TestClassParent
----@field id uint deterministic id used for foreign keys etc.
----@field entity LuaEntity Entity used as a base object in this example
----@field registration_id uint unit registration ID from factorio framework
+---@field public __name string class name used for logging and to index global.class_objects
+---@field public id uint deterministic id used for foreign keys etc.
+---@field private entity LuaEntity Entity used as a base object in this example
+---@field private registration_id uint unit registration ID from factorio framework
 local TestClass = {
-    ---class name used for logging and to index global.class_objects
     __name = "TestClass",
-    --- garbage collection callback; this needs to be part of the userdata table to make it work
-    ---@param self any
-    __gc = function(self)
-        if global.class_objects and global.class_objects[self.__name] then
-            assert(global.class_objects[self.__name][self.id] == nil)
-        end
-    end
 }
-
----Class setup
-TestClass.__index = TestClass
-setmetatable(
-    TestClass,
-    {
-        ---parent class; this is what makes the inheritance work
-        ---@see http://lua-users.org/wiki/MetatableEvents
-        __index = TestClassParent,
-        ---Class instanciation
-        ---@see http://lua-users.org/wiki/MetatableEvents
-        ---@param base table the class prototype that is being called/instanciated providing static class variables
-        ---@param o table existing simplified object-data (no metatables, no functions; for example a globalized class instance that got chopped down during saveing)
-        ---@param ... any? parameters for the constructor
-        ---@return any class reference to created class instance
-        __call = function(base, o, ...)
-            local data = (o or {})
-            local self = setmetatable(data, base)
-            self:new(o == nil, ...)
-            return self
-        end
-    }
-)
+TestClass = require("__nco-Testmod__.script.Class")(TestClass,TestClassParent)
 
 ---Static function to set up required additional globals during on_init
 function TestClass.on_init()
