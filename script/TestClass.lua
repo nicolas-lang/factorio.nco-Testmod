@@ -2,21 +2,22 @@ local TestClassParent = require("__nco-Testmod__.script.TestClassParent")
 
 ---TestClass to examine loading and re-creating class objects from globals
 ---@class TestClass : TestClassParent
----@field class_name string class name used for logging and to index global.class_objects
 ---@field id uint deterministic id used for foreign keys etc.
 ---@field entity LuaEntity Entity used as a base object in this example
 ---@field registration_id uint unit registration ID from factorio framework
 local TestClass = {
-    class_name = "TestClass",
+    ---class name used for logging and to index global.class_objects
+    __name = "TestClass",
     --- garbage collection callback; this needs to be part of the userdata table to make it work
     ---@param self any
     __gc = function(self)
-        if global.class_objects[self.class_name] then
-            assert(global.class_objects[self.class_name][self.id] == nil)
+        if global.class_objects and global.class_objects[self.__name] then
+            assert(global.class_objects[self.__name][self.id] == nil)
         end
     end
 }
-
+TestClass = require("__nco-Testmod__.script.ClassFactory")(TestClass,TestClassParent)
+--[[
 ---Class setup
 TestClass.__index = TestClass
 setmetatable(
@@ -39,10 +40,10 @@ setmetatable(
         end
     }
 )
-
+]]
 ---Static function to set up required additional globals during on_init
 function TestClass.on_init()
-    global.class_objects[TestClass.class_name] = {}
+    global.class_objects[TestClass.__name] = {}
 end
 
 ---Class Constructor
@@ -57,7 +58,7 @@ function TestClass:new(new, entity)
     if new and entity and entity.valid then
         self.entity = entity
         self.id = entity.unit_number
-        global.class_objects[self.class_name][self.id] = self
+        global.class_objects[self.__name][self.id] = self
         self:register_unit()
         self:log("unit #" .. self.id .. " created")
     end
@@ -67,7 +68,7 @@ end
 function TestClass:destroy()
     self:log("unit #" .. self.id .. " destroyed")
     self:unregister_unit()
-    global.class_objects[self.class_name][self.id] = nil
+    global.class_objects[self.__name][self.id] = nil
 end
 
 ---Entity validation
@@ -84,7 +85,7 @@ function TestClass:register_unit()
     if self:is_valid() then
         self.registration_id = script.register_on_entity_destroyed(self.entity)
         global.unit_registration[self.registration_id] = {
-            class_name = self.class_name,
+            class_name = self.__name,
             object_id = self.id
         }
     end
