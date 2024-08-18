@@ -31,8 +31,7 @@ jobs:
         with:
           args: dist/
       - name: Factorio release
-        uses: nicolas-lang/factorio-create-release-action@master
+        uses: nicolas-lang/factorio-create-release-action@use_apikey
         with:
-          factorio_password: ${{ secrets.FACTORIO_PASSWORD }}
-          factorio_user: ${{ secrets.FACTORIO_USER }}
+          MOD_UPLOAD_API_KEY: ${{ secrets.MOD_UPLOAD_API_KEY }}
 
