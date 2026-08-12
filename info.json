@@ -1,12 +1,12 @@
 {
 	"name": "nco-Testmod",
-	"version": "2.0.0",
+	"version": "2.1.0",
 	"title": "Test Mod",
 	"author": "Karoschl",
 	"contact": "",
 	"homepage": "",
 	"description": "Basic Mod Test, check github for details",
-	"factorio_version": "2.0",
+	"factorio_version": "2.1",
 	"dependencies": [
 		"base"
 	]
